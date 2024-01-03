@@ -26,7 +26,7 @@ public class OrderServiceImpl implements com.nishant.orderservice.services.Order
 
     private final Mapper<OrderLineItemsEntity, OrderLineItemsDto> orderLineItemsMapper;
     private final OrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     @Override
     public void placeOrder(OrderRequest orderRequest) {
@@ -51,8 +51,9 @@ public class OrderServiceImpl implements com.nishant.orderservice.services.Order
          * Call Inventory Service, and place order if product is in stock
          */
         InventoryResponse[] inventoryResponseArray;
-        inventoryResponseArray = webClient.get()
-                .uri("http://localhost:8083/api/inventory",
+        inventoryResponseArray = webClientBuilder.build()
+                .get()
+                .uri("http://inventory-service/api/inventory",
                         uriBuilder -> uriBuilder.queryParam(
                                 "skuCode", skuCodesList).build()
                 )
